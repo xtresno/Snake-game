@@ -9,6 +9,10 @@ import java.io.File;
 
 public class GamePanel extends JPanel implements ActionListener {
 
+	boolean showPlusOne = false;
+	int plusOneX = 0;
+	int plusOneY = 0;
+	int plusOneAlpha = 255; // For alpha compositing (transparency)
 	private static final long serialVersionUID = 1L;
 
 	static final int WIDTH = 500;
@@ -77,7 +81,10 @@ public class GamePanel extends JPanel implements ActionListener {
 			foodEaten++;
 			addFood();
 			playEatSound();
-
+			showPlusOne = true;
+			plusOneX = x[0];
+			plusOneY = y[0];
+			plusOneAlpha = 255; // Reset alpha to fully opaque
 		}
 	}
 
@@ -93,6 +100,16 @@ public class GamePanel extends JPanel implements ActionListener {
 					graphics.setColor(Color.BLUE); // Changed body color to blue
 				}
 				graphics.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+			}
+
+			if (showPlusOne) {
+				graphics.setColor(new Color(255, 255, 255, plusOneAlpha)); // White with alpha for transparency
+				graphics.setFont(new Font("Sans serif", Font.BOLD, 20));
+				graphics.drawString("+1", plusOneX, plusOneY);
+				plusOneAlpha -= 10; // Decrease alpha to fade out the text
+				if (plusOneAlpha <= 0) {
+					showPlusOne = false;
+				}
 			}
 
 			graphics.setColor(Color.WHITE);
@@ -150,6 +167,9 @@ public class GamePanel extends JPanel implements ActionListener {
 			move();
 			checkFood();
 			checkHit();
+		}
+		if (showPlusOne) {
+			plusOneY -= 2; // Move the "+1" text up
 		}
 		repaint();
 	}
