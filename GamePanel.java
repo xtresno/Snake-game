@@ -2,6 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioInputStream;
+import java.io.File;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -72,6 +76,8 @@ public class GamePanel extends JPanel implements ActionListener {
 			length++;
 			foodEaten++;
 			addFood();
+			playEatSound();
+
 		}
 	}
 
@@ -127,7 +133,8 @@ public class GamePanel extends JPanel implements ActionListener {
 		graphics.setFont(new Font("Sans serif", Font.ROMAN_BASELINE, 50));
 		FontMetrics metrics = getFontMetrics(graphics.getFont());
 		graphics.drawString("Game Over", (WIDTH - metrics.stringWidth("Game Over")) / 2, HEIGHT / 2);
-		graphics.drawString("Press Space to Restart!", (WIDTH - metrics.stringWidth("Press Space to Restart!")) / 3, HEIGHT / 4);
+		graphics.drawString("Press Space to Restart!", (WIDTH - metrics.stringWidth("Press Space to Restart!")) / 3,
+				HEIGHT / 4);
 
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font("Sans serif", Font.ROMAN_BASELINE, 25));
@@ -191,5 +198,17 @@ public class GamePanel extends JPanel implements ActionListener {
 			y[i] = 0;
 		}
 		play();
+	}
+
+	public void playEatSound() {
+		try {
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("./sounds/eatSound.wav"));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		} catch (Exception e) {
+			System.out.println("Error with playing sound.");
+			e.printStackTrace();
+		}
 	}
 }
